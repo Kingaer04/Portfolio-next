@@ -68,7 +68,7 @@ export default function Navbar() {
 
         {/* Contact CTA */}
         {/* ── EDIT: replace with your email ── */}
-        <a href="mailto:you@email.com"
+        <a href="mailto:danielanifowoshe04@gmail.com"
           className="hidden md:inline-flex items-center gap-1.5 font-mono text-xs px-4 py-2 border border-green/40 text-green rounded-md hover:bg-green/10 hover:border-green transition-all">
           <span className="text-green/70">&gt;</span> contact()
         </a>

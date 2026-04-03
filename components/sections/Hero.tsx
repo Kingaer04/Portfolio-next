@@ -137,7 +137,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Socials + stack */}
-        <motion.div {...fadeUp(0.8)} className="flex flex-col items-center gap-5">
+        <motion.div {...fadeUp(0.8)} className="flex flex-col items-center gap-8">
           <div className="flex items-center gap-5">
             {/* ── EDIT: your actual URLs ── */}
             <a href="https://github.com/Kingaer04/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-green transition-colors"><FiGithub size={19} /></a>
@@ -145,7 +145,7 @@ export default function Hero() {
             <a href="https://www.linkedin.com/in/daniel-anifowoshe-528373251/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-cyan transition-colors"><FiLinkedin size={19} /></a>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-xs text-muted/50">
-            {["C#", ".NET 8", "Next.js 14", "TypeScript", "PostgreSQL", "Docker"].map((t, i, arr) => (
+            {["C#", ".NET 8", "Next.js 14", "TypeScript", "MongoDB", "MERN stack"].map((t, i, arr) => (
               <span key={t} className="flex items-center gap-4">
                 <span className="hover:text-muted/80 transition-colors cursor-default">{t}</span>
                 {i < arr.length - 1 && <span className="text-border/40">·</span>}
@@ -158,7 +158,7 @@ export default function Hero() {
       {/* Scroll hint */}
       <motion.a href="#skills" aria-label="Scroll down"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted hover:text-green transition-colors animate-float">
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-muted hover:text-green transition-colors animate-float">
         <span className="font-mono text-[10px] tracking-widest uppercase">scroll</span>
         <FiArrowDown size={14} />
       </motion.a>
