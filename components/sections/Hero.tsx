@@ -78,16 +78,15 @@ export default function Hero() {
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         {/* Status pill */}
-        <motion.div {...fadeUp(0.1)} className="inline-flex items-center gap-2 mb-8">
+        {/* <motion.div {...fadeUp(0.1)} className="inline-flex items-center gap-2 mb-8">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green" />
           </span>
           <span className="font-mono text-xs text-muted border border-border rounded-full px-3 py-1 tracking-wide">
-            {/* ── EDIT: your current status ── */}
             Available for new opportunities
           </span>
-        </motion.div>
+        </motion.div> */}
 
         {/* Name */}
         <motion.h1 {...fadeUp(0.2)} className="font-mono font-bold text-text leading-none mb-3"
@@ -115,13 +114,13 @@ export default function Hero() {
         </motion.div>
 
         {/* Bio */}
-        <motion.p {...fadeUp(0.5)}
+        {/* <motion.p {...fadeUp(0.5)}
           className="font-sans text-muted max-w-xl mx-auto leading-relaxed mb-10 text-base md:text-lg">
-          {/* ── EDIT: your bio ── */}
+          {/* ── EDIT: your bio ── 
           I architect and ship production-grade applications —{" "}
           <span className="text-text">C# .NET backends</span> paired with fast,
           accessible <span className="text-text">Next.js frontends. And also vertile in Mern stack for web development and React native for mobile development</span>. 
-        </motion.p>
+        </motion.p>*/}
 
         {/* CTAs */}
         <motion.div {...fadeUp(0.65)} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
