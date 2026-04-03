@@ -14,7 +14,7 @@ export default function Footer() {
     <footer className="border-t border-border bg-surface">
       <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="font-mono text-xs text-muted">
-          <span className="text-green">// </span>
+          {/* <span className="text-green">// </span> */}
           &copy; {year} Daniel Anifowoshe. Built with Next.js.
         </p>
         <div className="flex items-center gap-5">
