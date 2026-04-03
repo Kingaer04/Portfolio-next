@@ -93,7 +93,7 @@ export default function Hero() {
         <motion.h1 {...fadeUp(0.2)} className="font-mono font-bold text-text leading-none mb-3"
           style={{ fontSize: "clamp(2.8rem, 8vw, 5.5rem)" }}>
           {/* ── EDIT: your name ── */}
-          <span className="text-green">&gt;&nbsp;</span>Your Name
+          <span className="text-green">&gt;&nbsp;</span>Daniel Anifowoshe
         </motion.h1>
 
         {/* Typing */}
@@ -118,8 +118,7 @@ export default function Hero() {
           {/* ── EDIT: your bio ── */}
           I architect and ship production-grade applications —{" "}
           <span className="text-text">C# .NET backends</span> paired with fast,
-          accessible <span className="text-text">Next.js frontends</span>. Currently
-          building a full Healthcare Management System from the ground up.
+          accessible <span className="text-text">Next.js frontends. And also vertile in Mern stack for web development and React native for mobile development</span>. 
         </motion.p>
 
         {/* CTAs */}
@@ -139,9 +138,9 @@ export default function Hero() {
         <motion.div {...fadeUp(0.8)} className="flex flex-col items-center gap-5">
           <div className="flex items-center gap-5">
             {/* ── EDIT: your actual URLs ── */}
-            <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-green transition-colors"><FiGithub size={19} /></a>
+            <a href="https://github.com/Kingaer04/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-green transition-colors"><FiGithub size={19} /></a>
             <span className="text-border/50">|</span>
-            <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-cyan transition-colors"><FiLinkedin size={19} /></a>
+            <a href="https://www.linkedin.com/in/daniel-anifowoshe-528373251/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-cyan transition-colors"><FiLinkedin size={19} /></a>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-xs text-muted/50">
             {["C#", ".NET 8", "Next.js 14", "TypeScript", "PostgreSQL", "Docker"].map((t, i, arr) => (

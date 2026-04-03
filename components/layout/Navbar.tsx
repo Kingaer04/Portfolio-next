@@ -41,7 +41,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <a href="#hero" className="font-mono text-green font-bold text-base tracking-tight hover:opacity-75 transition-opacity flex items-center gap-1">
-          <span className="text-muted">&lt;</span>YN<span className="text-muted">/&gt;</span>
+          <span className="text-muted">&lt;</span>ANNY<span className="text-muted">/&gt;</span>
         </a>
 
         {/* Desktop nav */}
@@ -99,7 +99,7 @@ export default function Navbar() {
                   <a href={href}
                     onClick={() => setMenuOpen(false)}
                     className="font-mono text-sm text-muted hover:text-green transition-colors flex items-center gap-2 py-2">
-                    <span className="text-green/50">./</span>{label}
+                    <span className="text-green/50"></span>{label}
                   </a>
                 </li>
               ))}

@@ -15,21 +15,21 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Your Name — Full-Stack Developer",
+  title: "Daniel Anifowoshe — Full-Stack Developer",
   description:
-    "Full-stack developer specializing in C# .NET and Next.js. Building robust, scalable applications.",
+    "Full-stack developer specializing in C# .NET, Next.js, MERN stack for web development and React Native for mobile development. Building robust, scalable applications.",
   keywords: ["developer", "portfolio", "Next.js", "C#", ".NET", "full-stack"],
-  authors: [{ name: "Your Name" }],
+  authors: [{ name: "Daniel Anifowoshe" }],
   openGraph: {
-    title: "Your Name — Full-Stack Developer",
+    title: "Daniel Anifowoshe — Full-Stack Developer",
     description: "Full-stack developer specializing in C# .NET and Next.js.",
     type: "website",
-    url: "https://yourname.dev",
+    url: "https://danielanifowoshe.dev",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Your Name — Full-Stack Developer",
+    title: "Daniel Anifowoshe — Full-Stack Developer",
     description: "Full-stack developer specializing in C# .NET and Next.js.",
     images: ["/og-image.png"],
   },
