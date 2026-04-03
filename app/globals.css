@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg:      #0D1117;
+  --color-surface: #161B22;
+  --color-border:  #30363D;
+  --color-green:   #3FB950;
+  --color-cyan:    #58A6FF;
+  --color-orange:  #F0883E;
+  --color-text:    #E6EDF3;
+  --color-muted:   #8B949E;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+/* Selection */
+::selection { background: rgba(63,185,80,0.2); color: var(--color-text); }
+
+/* Focus ring */
+*:focus-visible { outline: 2px solid var(--color-green); outline-offset: 3px; border-radius: 4px; }
+
+/* Dot grid */
+.dot-grid {
+  background-image: radial-gradient(circle, #30363D 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Utility: green box glow on hover (applied via JS for performance) */
+.card-glow {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.card-glow:hover {
+  box-shadow: 0 0 28px rgba(63,185,80,0.12), 0 4px 24px rgba(0,0,0,0.3);
+  transform: translateY(-3px);
+}
