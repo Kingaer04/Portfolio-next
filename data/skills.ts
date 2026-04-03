@@ -14,16 +14,16 @@ export const skillCategories: SkillCategory[] = [
   {
     label: "Backend",
     color: "green",
-    skills: ["C#", ".NET 8", "ASP.NET Core", "SignalR", "REST APIs"],
+    skills: ["C#", ".NET 8", "ASP.NET Core", "Node", "Express.js", "REST APIs"],
   },
   {
     label: "Database",
     color: "orange",
-    skills: ["PostgreSQL", "Redis", "Entity Framework Core", "SQL Server"],
+    skills: ["MongoDB", "Mongoose", "Entity Framework Core", "SQL Server"],
   },
   {
     label: "DevOps & Tools",
     color: "muted",
-    skills: ["Docker", "GitHub Actions", "Nginx", "Vercel", "Git"],
+    skills: ["GitHub Actions", "Vercel", "Git"],
   },
 ];

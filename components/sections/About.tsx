@@ -8,8 +8,8 @@ const FACTS = [
   /* ── EDIT: replace with your own facts ── */
   { icon: FiCode,     label: "Primary stack",   value: "C# + Next.js" },
   { icon: FiServer,   label: "Architecture",    value: "Onion / Clean" },
-  { icon: FiDatabase, label: "Database",        value: "PostgreSQL" },
-  { icon: FiGlobe,    label: "Based in",        value: "Lagos, Nigeria" },
+  { icon: FiDatabase, label: "Database",        value: "MongoDB" },
+  { icon: FiGlobe,    label: "Based in",        value: "Ogun, Nigeria" },
 ];
 
 export default function About() {
