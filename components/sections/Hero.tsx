@@ -103,10 +103,12 @@ export default function Hero() {
           <TypeAnimation
             sequence={[
               /* ── EDIT: your roles ── */
-              "Full-Stack Developer", 2200,
+              "Software Developer", 2200,
               "C# .NET Engineer",     2200,
+              "MERN stack Developer",     2200,
               "Next.js Craftsman",    2200,
-              "System Architect",     2200,
+              "A mobile Dev",     2200,
+              
             ]}
             wrapper="span" speed={55} repeat={Infinity} className="text-cyan" />
           <span className="text-border">]</span>

@@ -2,10 +2,10 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 const SOCIALS = [
-  { icon: FaGithub,   href: "https://github.com/yourusername",          label: "GitHub" },
-  { icon: FaLinkedin, href: "https://linkedin.com/in/yourprofile",       label: "LinkedIn" },
-  { icon: FaTwitter,  href: "https://twitter.com/yourhandle",            label: "Twitter" },
-  { icon: MdEmail,    href: "mailto:you@email.com",                      label: "Email" },
+  { icon: FaGithub,   href: "https://github.com/Kingaer04/",          label: "GitHub" },
+  { icon: FaLinkedin, href: "https://www.linkedin.com/in/daniel-anifowoshe-528373251/",       label: "LinkedIn" },
+  { icon: FaTwitter,  href: "https://x.com/Dannykingaer",            label: "Twitter" },
+  { icon: MdEmail,    href: "mailto:danielanifowoshe04@gmail.com",                      label: "Email" },
 ];
 
 export default function Footer() {
@@ -15,7 +15,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         <p className="font-mono text-xs text-muted">
           <span className="text-green">// </span>
-          &copy; {year} Your Name. Built with Next.js.
+          &copy; {year} Daniel Anifowoshe. Built with Next.js.
         </p>
         <div className="flex items-center gap-5">
           {SOCIALS.map(({ icon: Icon, href, label }) => (
