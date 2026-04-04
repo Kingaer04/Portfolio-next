@@ -143,9 +143,9 @@ export default function Hero() {
             <span className="text-border/50">|</span>
             <a href="https://www.linkedin.com/in/daniel-anifowoshe-528373251/" target="_blank" rel="noopener noreferrer" className="text-muted hover:text-cyan transition-colors"><FiLinkedin size={19} /></a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-4 font-mono text-xs text-muted/50">
-            {["C#", ".NET 8", "Next.js 14", "TypeScript", "MongoDB", "MERN stack"].map((t, i, arr) => (
-              <span key={t} className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-xs text-muted/50 max-w-xs mx-auto">
+            {["C#", ".NET 8", "Next.js 14", "TypeScript", "MongoDB", "MERN"].map((t, i, arr) => (
+              <span key={t} className="flex items-center gap-3">
                 <span className="hover:text-muted/80 transition-colors cursor-default">{t}</span>
                 {i < arr.length - 1 && <span className="text-border/40">·</span>}
               </span>

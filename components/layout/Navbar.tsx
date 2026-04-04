@@ -11,10 +11,62 @@ const NAV_LINKS = [
   { label: "projects", href: "#projects" },
 ];
 
+function GlitchLogo() {
+  const [glitching, setGlitching] = useState(false);
+  const [displayText, setDisplayText] = useState("ANNY");
+  const chars = "アイウエオ#@$%01カキクケ";
+  const original = "ANNY";
+
+  const triggerGlitch = () => {
+    if (glitching) return;
+    setGlitching(true);
+    let iterations = 0;
+    const interval = setInterval(() => {
+      setDisplayText(
+        original.split("").map((char, i) =>
+          i < iterations
+            ? original[i]
+            : chars[Math.floor(Math.random() * chars.length)]
+        ).join("")
+      );
+      iterations += 0.4;
+      if (iterations >= original.length + 1) {
+        clearInterval(interval);
+        setDisplayText(original);
+        setGlitching(false);
+      }
+    }, 60);
+  };
+
+  useEffect(() => {
+    setTimeout(triggerGlitch, 800);
+    const loop = setInterval(triggerGlitch, 5000);
+    return () => clearInterval(loop);
+  }, []);
+
+  return (
+    <span
+      onMouseEnter={triggerGlitch}
+      className="font-mono font-bold text-base tracking-tight cursor-pointer select-none flex items-center gap-0.5 group"
+    >
+      <span className="text-muted group-hover:text-green transition-colors">&lt;</span>
+      <span className="text-green relative">
+        {displayText}
+        {glitching && (
+          <span className="absolute inset-0 text-cyan opacity-40 translate-x-0.5 pointer-events-none">
+            {displayText}
+          </span>
+        )}
+      </span>
+      <span className="text-muted group-hover:text-green transition-colors">/&gt;</span>
+    </span>
+  );
+}
+
 export default function Navbar() {
-  const [scrolled,      setScrolled]      = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
-  const [menuOpen,      setMenuOpen]      = useState(false);
+  const [scrolled,       setScrolled]      = useState(false);
+  const [activeSection,  setActiveSection] = useState("hero");
+  const [menuOpen,       setMenuOpen]      = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -39,9 +91,9 @@ export default function Navbar() {
     )}>
       <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {/* Logo */}
-        <a href="#hero" className="font-mono text-green font-bold text-base tracking-tight hover:opacity-75 transition-opacity flex items-center gap-1">
-          <span className="text-muted">&lt;</span>ANNY<span className="text-muted">/&gt;</span>
+        {/* Glitch logo */}
+        <a href="#hero" aria-label="Home">
+          <GlitchLogo />
         </a>
 
         {/* Desktop nav */}
@@ -67,7 +119,6 @@ export default function Navbar() {
         </ul>
 
         {/* Contact CTA */}
-        {/* ── EDIT: replace with your email ── */}
         <a href="mailto:danielanifowoshe04@gmail.com"
           className="hidden md:inline-flex items-center gap-1.5 font-mono text-xs px-4 py-2 border border-green/40 text-green rounded-md hover:bg-green/10 hover:border-green transition-all">
           <span className="text-green/70">&gt;</span> contact()
@@ -99,12 +150,12 @@ export default function Navbar() {
                   <a href={href}
                     onClick={() => setMenuOpen(false)}
                     className="font-mono text-sm text-muted hover:text-green transition-colors flex items-center gap-2 py-2">
-                    <span className="text-green/50"></span>{label}
+                    <span className="text-green/50">./</span>{label}
                   </a>
                 </li>
               ))}
               <li className="pt-2 border-t border-border mt-1">
-                <a href="mailto:you@email.com"
+                <a href="mailto:danielanifowoshe04@gmail.com"
                   onClick={() => setMenuOpen(false)}
                   className="font-mono text-sm text-green flex items-center gap-2 py-2">
                   <span className="text-green/50">&gt;</span> contact()
