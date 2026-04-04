@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { FiDownload, FiArrowDown, FiGithub, FiLinkedin } from "react-icons/fi";
 
+// ── Matrix canvas ─────────────────────────────────────────────────────
 function MatrixCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -47,10 +48,7 @@ function CursorGlow() {
   useEffect(() => {
     const el = glowRef.current;
     if (!el) return;
-    const onMove = (e: MouseEvent) => {
-      el.style.left = `${e.clientX}px`;
-      el.style.top  = `${e.clientY}px`;
-    };
+    const onMove = (e: MouseEvent) => { el.style.left = `${e.clientX}px`; el.style.top = `${e.clientY}px`; };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
@@ -63,49 +61,138 @@ function CursorGlow() {
   );
 }
 
-/* Scanline boot text — types out a fake system init */
-function BootSequence() {
-  const [visible, setVisible] = useState(true);
-  const [lines, setLines]     = useState<string[]>([]);
-  const sequence = [
-    "SYSTEM BOOT :: T-800 NEURAL NET v2.4",
-    "LOADING TARGET PROFILE...",
-    "IDENTITY: DANIEL ANIFOWOSHE",
-    "CLASSIFICATION: FULL-STACK ENGINEER",
-    "STATUS: ONLINE ██████████ 100%",
-  ];
+// ── Full-screen boot overlay ──────────────────────────────────────────
+const BOOT_LINES = [
+  { text: "CYBERDYNE SYSTEMS :: MODEL T-800 INITIALIZING...", delay: 0 },
+  { text: "LOADING NEURAL NET PROCESSOR...", delay: 400 },
+  { text: "CPU CORES ONLINE ████████████ 100%", delay: 800 },
+  { text: "SCANNING TARGET DATABASE...", delay: 1200 },
+  { text: "TARGET ACQUIRED :: DANIEL ANIFOWOSHE", delay: 1700 },
+  { text: "CLASSIFICATION: FULL-STACK ENGINEER", delay: 2100 },
+  { text: "THREAT LEVEL: EXCEPTIONAL", delay: 2500 },
+  { text: "MISSION: DELIVER PRODUCTION-GRADE SOFTWARE", delay: 2900 },
+  { text: "STATUS: ALL SYSTEMS ONLINE ✓", delay: 3400 },
+  { text: "BOOTING INTERFACE...", delay: 3900 },
+];
+
+function BootOverlay({ onDone }: { onDone: () => void }) {
+  const [visibleLines, setVisibleLines] = useState<number[]>([]);
+  const [progress,     setProgress]     = useState(0);
+  const [exiting,      setExiting]      = useState(false);
 
   useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < sequence.length) {
-        setLines((prev) => [...prev, sequence[i]]);
-        i++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => setVisible(false), 600);
-      }
-    }, 320);
-    return () => clearInterval(interval);
+    // Reveal lines one by one
+    BOOT_LINES.forEach(({ delay }, i) => {
+      setTimeout(() => {
+        setVisibleLines((p) => [...p, i]);
+      }, delay);
+    });
+
+    // Progress bar
+    const start = Date.now();
+    const duration = 4000;
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      setProgress(Math.min(100, Math.round((elapsed / duration) * 100)));
+      if (elapsed < duration) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    // Exit
+    setTimeout(() => {
+      setExiting(true);
+      setTimeout(onDone, 600);
+    }, 4500);
   }, []);
 
-  if (!visible) return null;
   return (
-    <motion.div
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="font-mono text-[11px] text-green/50 mb-6 text-left w-full max-w-sm mx-auto space-y-0.5"
-    >
-      {lines.map((line, i) => (
-        <motion.p key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.2 }} className="flex items-center gap-2">
-          <span className="text-green/30">&gt;</span> {line}
-        </motion.p>
-      ))}
-    </motion.div>
+    <AnimatePresence>
+      {!exiting ? (
+        <motion.div
+          key="boot"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6 }}
+          className="fixed inset-0 z-[100] bg-bg flex flex-col items-center justify-center px-6 overflow-hidden"
+        >
+          {/* Fast matrix rain behind boot text */}
+          <MatrixCanvas />
+          <div className="absolute inset-0 bg-bg/80 pointer-events-none" />
+
+          <div className="relative z-10 w-full max-w-2xl">
+            {/* Header */}
+            <div className="border border-green/30 rounded-lg overflow-hidden">
+              {/* Title bar */}
+              <div className="flex items-center justify-between px-4 py-2 bg-green/5 border-b border-green/20">
+                <span className="font-mono text-xs text-green tracking-widest">
+                  CYBERDYNE_OS v2.4 :: BOOT_SEQUENCE
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-green animate-pulse" />
+                  <span className="font-mono text-[10px] text-green/60">LIVE</span>
+                </div>
+              </div>
+
+              {/* Terminal lines */}
+              <div className="p-5 space-y-1.5 min-h-[280px] bg-bg/60">
+                {BOOT_LINES.map((line, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={visibleLines.includes(i) ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.25 }}
+                    className="font-mono text-sm flex items-start gap-3"
+                  >
+                    <span className="text-green/50 mt-0.5 flex-shrink-0">&gt;</span>
+                    <span className={
+                      line.text.includes("ACQUIRED") || line.text.includes("EXCEPTIONAL") || line.text.includes("ONLINE ✓")
+                        ? "text-green font-bold"
+                        : line.text.includes("INITIALIZING") || line.text.includes("BOOTING")
+                        ? "text-cyan"
+                        : "text-green/70"
+                    }>
+                      {line.text}
+                    </span>
+                  </motion.div>
+                ))}
+
+                {/* Blinking cursor at end */}
+                {visibleLines.length === BOOT_LINES.length && (
+                  <div className="font-mono text-sm flex items-center gap-3 mt-1">
+                    <span className="text-green/50">&gt;</span>
+                    <span className="w-2 h-4 bg-green animate-blink inline-block" />
+                  </div>
+                )}
+              </div>
+
+              {/* Progress bar */}
+              <div className="px-5 py-3 border-t border-green/20 bg-bg/80">
+                <div className="flex items-center justify-between font-mono text-[11px] text-green/50 mb-2">
+                  <span>SYSTEM_LOAD</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="w-full h-1.5 bg-green/10 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-green rounded-full"
+                    style={{ width: `${progress}%` }}
+                    transition={{ ease: "linear" }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom label */}
+            <p className="font-mono text-[10px] text-green/30 text-center mt-4 tracking-widest">
+              PRESS ANY KEY TO SKIP — OR WAIT FOR AUTO-BOOT
+            </p>
+          </div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
   );
 }
 
+// ── Main hero ─────────────────────────────────────────────────────────
 const fadeUp = (delay = 0) => ({
   initial:    { opacity: 0, y: 28 },
   animate:    { opacity: 1, y: 0 },
@@ -113,129 +200,142 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function Hero() {
+  const [booted, setBooted] = useState(false);
+
+  // Allow skipping with any key or click
+  useEffect(() => {
+    const skip = () => setBooted(true);
+    window.addEventListener("keydown", skip, { once: true });
+    window.addEventListener("click",   skip, { once: true });
+    return () => {
+      window.removeEventListener("keydown", skip);
+      window.removeEventListener("click",   skip);
+    };
+  }, []);
+
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-bg" />
-      <MatrixCanvas />
+    <>
+      {/* Boot overlay — covers entire screen */}
+      {!booted && <BootOverlay onDone={() => setBooted(true)} />}
 
-      {/* Dark radial vignette so text stays readable over the matrix */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(13,17,23,0) 0%, rgba(13,17,23,0.88) 75%)",
-      }} />
+      {/* Actual hero — hidden behind boot overlay */}
+      <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-bg" />
+        <MatrixCanvas />
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(13,17,23,0) 0%, rgba(13,17,23,0.88) 75%)",
+        }} />
+        {/* Scanlines */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, #3FB950 2px, #3FB950 3px)", backgroundSize: "100% 4px" }} />
+        <CursorGlow />
 
-      {/* Horizontal scanlines overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, #3FB950 2px, #3FB950 3px)", backgroundSize: "100% 4px" }} />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={booted ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center pt-20 flex flex-col items-center"
+        >
+          {/* Top label */}
+          <motion.div {...fadeUp(0.2)} className="inline-flex items-center gap-2 mb-5">
+            <span className="h-px w-8 bg-green/40" />
+            <span className="font-mono text-[11px] text-green/60 tracking-[0.3em] uppercase">
+              Target Acquired
+            </span>
+            <span className="h-px w-8 bg-green/40" />
+          </motion.div>
 
-      <CursorGlow />
+          {/* Name */}
+          <motion.h1 {...fadeUp(0.35)} className="font-mono font-bold text-text leading-none mb-4"
+            style={{ fontSize: "clamp(2.6rem, 8vw, 5.5rem)" }}>
+            <span className="text-green">&gt;&nbsp;</span>Daniel Anifowoshe
+          </motion.h1>
 
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center pt-20 flex flex-col items-center">
+          {/* Typing role */}
+          <motion.div {...fadeUp(0.5)} className="font-mono mb-4 flex items-center justify-center gap-2"
+            style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.35rem)" }}>
+            <span className="text-green/40">[</span>
+            <TypeAnimation
+              sequence={[
+                "Software Developer",   2200,
+                "C# .NET Engineer",     2200,
+                "MERN Stack Developer", 2200,
+                "Next.js Craftsman",    2200,
+                "Mobile Dev",           2200,
+              ]}
+              wrapper="span" speed={55} repeat={Infinity} className="text-cyan" />
+            <span className="text-green/40">]</span>
+          </motion.div>
 
-        {/* Boot sequence */}
-        <BootSequence />
+          {/* Bio */}
+          <motion.p {...fadeUp(0.65)}
+            className="font-sans text-muted max-w-lg mx-auto leading-relaxed mb-10 text-sm md:text-base">
+            I architect and ship production-grade applications —{" "}
+            <span className="text-text font-medium">C# .NET backends</span> paired with fast{" "}
+            <span className="text-text font-medium">Next.js frontends</span>. Also versed in the{" "}
+            <span className="text-text font-medium">MERN stack</span> and{" "}
+            <span className="text-text font-medium">React Native</span> for mobile.
+          </motion.p>
 
-        {/* Top label */}
-        <motion.div {...fadeUp(1.8)} className="inline-flex items-center gap-2 mb-5">
-          <span className="h-px w-8 bg-green/40" />
-          <span className="font-mono text-[11px] text-green/60 tracking-[0.3em] uppercase">
-            Target Acquired
-          </span>
-          <span className="h-px w-8 bg-green/40" />
-        </motion.div>
-
-        {/* Name */}
-        <motion.h1 {...fadeUp(1.9)} className="font-mono font-bold text-text leading-none mb-4"
-          style={{ fontSize: "clamp(2.6rem, 8vw, 5.5rem)" }}>
-          <span className="text-green">&gt;&nbsp;</span>Daniel Anifowoshe
-        </motion.h1>
-
-        {/* Typing role */}
-        <motion.div {...fadeUp(2.0)} className="font-mono mb-4 flex items-center justify-center gap-2"
-          style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.35rem)" }}>
-          <span className="text-green/40">[</span>
-          <TypeAnimation
-            sequence={[
-              "Software Developer",   2200,
-              "C# .NET Engineer",     2200,
-              "MERN Stack Developer", 2200,
-              "Next.js Craftsman",    2200,
-              "Mobile Dev",           2200,
-            ]}
-            wrapper="span" speed={55} repeat={Infinity} className="text-cyan" />
-          <span className="text-green/40">]</span>
-        </motion.div>
-
-        {/* Bio */}
-        <motion.p {...fadeUp(2.1)}
-          className="font-sans text-muted max-w-lg mx-auto leading-relaxed mb-10 text-sm md:text-base">
-          I architect and ship production-grade applications —{" "}
-          <span className="text-text font-medium">C# .NET backends</span> paired with fast{" "}
-          <span className="text-text font-medium">Next.js frontends</span>. Also versed in the{" "}
-          <span className="text-text font-medium">MERN stack</span> and{" "}
-          <span className="text-text font-medium">React Native</span> for mobile.
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div {...fadeUp(2.2)}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-          <a href="#projects"
-            className="inline-flex items-center gap-2 font-mono text-sm font-bold px-7 py-3 bg-green text-bg rounded hover:bg-green/90 active:scale-95 transition-all tracking-wider">
-            ▶ view_projects()
-          </a>
-          <a href="#skills"
-            className="inline-flex items-center gap-2 font-mono text-sm px-7 py-3 border border-green/30 text-green/80 rounded hover:border-green hover:text-green hover:bg-green/5 transition-all tracking-wider">
-            ■ explore_skills()
-          </a>
-          <a href="/cv.pdf" download
-            className="inline-flex items-center gap-2 font-mono text-xs px-4 py-3 text-muted hover:text-green transition-colors">
-            <FiDownload size={13} /> download_cv
-          </a>
-        </motion.div>
-
-        {/* Socials + stack */}
-        <motion.div {...fadeUp(2.3)} className="flex flex-col items-center gap-5 pb-24">
-          {/* Divider */}
-          <div className="flex items-center gap-3 w-full max-w-xs">
-            <div className="flex-1 h-px bg-border/50" />
-            <span className="font-mono text-[10px] text-border tracking-widest">LINKS</span>
-            <div className="flex-1 h-px bg-border/50" />
-          </div>
-
-          <div className="flex items-center gap-6">
-            <a href="https://github.com/Kingaer04/" target="_blank" rel="noopener noreferrer"
-              className="font-mono text-xs text-muted hover:text-green transition-colors flex items-center gap-1.5">
-              <FiGithub size={16} /> github
+          {/* CTAs */}
+          <motion.div {...fadeUp(0.8)}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+            <a href="#projects"
+              className="inline-flex items-center gap-2 font-mono text-sm font-bold px-7 py-3 bg-green text-bg rounded hover:bg-green/90 active:scale-95 transition-all tracking-wider">
+              ▶ view_projects()
             </a>
-            <span className="text-border/50 text-xs">//</span>
-            <a href="https://www.linkedin.com/in/daniel-anifowoshe-528373251/" target="_blank" rel="noopener noreferrer"
-              className="font-mono text-xs text-muted hover:text-cyan transition-colors flex items-center gap-1.5">
-              <FiLinkedin size={16} /> linkedin
+            <a href="#skills"
+              className="inline-flex items-center gap-2 font-mono text-sm px-7 py-3 border border-green/30 text-green/80 rounded hover:border-green hover:text-green hover:bg-green/5 transition-all tracking-wider">
+              ■ explore_skills()
             </a>
-          </div>
+            <a href="/cv.pdf" download
+              className="inline-flex items-center gap-2 font-mono text-xs px-4 py-3 text-muted hover:text-green transition-colors">
+              <FiDownload size={13} /> download_cv
+            </a>
+          </motion.div>
 
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] text-muted/40 max-w-xs">
-            {["C#", ".NET 8", "Next.js", "TypeScript", "MongoDB", "MERN"].map((t, i, arr) => (
-              <span key={t} className="flex items-center gap-3">
-                <span className="hover:text-muted/70 transition-colors cursor-default">{t}</span>
-                {i < arr.length - 1 && <span className="text-border/30">·</span>}
-              </span>
-            ))}
-          </div>
+          {/* Socials + stack */}
+          <motion.div {...fadeUp(0.95)} className="flex flex-col items-center gap-5 pb-24">
+            <div className="flex items-center gap-3 w-full max-w-xs">
+              <div className="flex-1 h-px bg-border/50" />
+              <span className="font-mono text-[10px] text-border tracking-widest">LINKS</span>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
+            <div className="flex items-center gap-6">
+              <a href="https://github.com/Kingaer04/" target="_blank" rel="noopener noreferrer"
+                className="font-mono text-xs text-muted hover:text-green transition-colors flex items-center gap-1.5">
+                <FiGithub size={16} /> github
+              </a>
+              <span className="text-border/50 text-xs">//</span>
+              <a href="https://www.linkedin.com/in/daniel-anifowoshe-528373251/" target="_blank" rel="noopener noreferrer"
+                className="font-mono text-xs text-muted hover:text-cyan transition-colors flex items-center gap-1.5">
+                <FiLinkedin size={16} /> linkedin
+              </a>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 font-mono text-[11px] text-muted/40 max-w-xs">
+              {["C#", ".NET 8", "Next.js", "TypeScript", "MongoDB", "MERN"].map((t, i, arr) => (
+                <span key={t} className="flex items-center gap-3">
+                  <span className="hover:text-muted/70 transition-colors cursor-default">{t}</span>
+                  {i < arr.length - 1 && <span className="text-border/30">·</span>}
+                </span>
+              ))}
+            </div>
+          </motion.div>
         </motion.div>
-      </div>
 
-      {/* Scroll hint — always visible, perfectly centered, above everything */}
-      <motion.a
-        href="#about"
-        aria-label="Scroll down"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.8 }}
-        className="absolute bottom-8 left-0 right-0 z-20 flex flex-col items-center gap-1 text-muted hover:text-green transition-colors animate-float"
-      >
-        <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-green/50">scroll</span>
-        <FiArrowDown size={14} className="text-green/50" />
-      </motion.a>
-    </section>
+        {/* Scroll hint */}
+        <motion.a
+          href="#about"
+          aria-label="Scroll down"
+          initial={{ opacity: 0 }}
+          animate={booted ? { opacity: 1 } : {}}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-0 right-0 z-20 flex flex-col items-center gap-1 text-muted hover:text-green transition-colors animate-float"
+        >
+          <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-green/50">scroll</span>
+          <FiArrowDown size={14} className="text-green/50" />
+        </motion.a>
+      </section>
+    </>
   );
 }
