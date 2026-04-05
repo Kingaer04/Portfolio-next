@@ -66,33 +66,43 @@ function CursorGlow() {
 // ── Glitch decode ─────────────────────────────────────────────────────
 const GLITCH_CHARS = "アイウエオカキ01#@$%&{}[]<>|_=+-*/\\;:!?~^";
 const FULL_NAME    = "Daniel Anifowoshe";
+const NAME_WORDS   = ["Daniel", "Anifowoshe"];
 
-function GlitchName({ runKey }: { runKey: number }) {
-  const [display, setDisplay] = useState<string[]>(() => Array(FULL_NAME.length).fill("_"));
+function GlitchWord({
+  word,
+  startIndex,
+  runKey,
+  fontSize,
+}: {
+  word: string;
+  startIndex: number;
+  runKey: number;
+  fontSize?: string;
+}) {
+  const [display, setDisplay] = useState<string[]>(() => Array(word.length).fill("_"));
   const [settled, setSettled] = useState(false);
   const [flicker, setFlicker] = useState(false);
 
   useEffect(() => {
-    setDisplay(Array(FULL_NAME.length).fill("_"));
+    setDisplay(Array(word.length).fill("_"));
     setSettled(false);
     setFlicker(false);
 
-    // Phase 1 — chaos
+    // Delay start based on position in full name so words decode in order
+    const startDelay = 600 + startIndex * 40;
+
     const chaosId = setInterval(() => {
-      setDisplay(
-        FULL_NAME.split("").map((ch) =>
-          ch === " " ? " " : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
-        )
-      );
+      setDisplay(word.split("").map(() =>
+        GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
+      ));
     }, 50);
 
-    // Phase 2 — decode
     setTimeout(() => {
       clearInterval(chaosId);
       let resolved = 0;
 
       const decodeNext = () => {
-        if (resolved >= FULL_NAME.length) {
+        if (resolved >= word.length) {
           setTimeout(() => {
             setFlicker(true);
             setTimeout(() => { setFlicker(false); setSettled(true); }, 180);
@@ -102,11 +112,11 @@ function GlitchName({ runKey }: { runKey: number }) {
         let ticks = 0;
         const glitchId = setInterval(() => {
           setDisplay((prev) =>
-            prev.map((_, i) => {
-              if (i < resolved) return FULL_NAME[i];
-              if (FULL_NAME[i] === " ") return " ";
-              return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
-            })
+            prev.map((_, i) =>
+              i < resolved
+                ? word[i]
+                : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
+            )
           );
           ticks++;
           if (ticks >= 4) { clearInterval(glitchId); resolved++; decodeNext(); }
@@ -114,20 +124,21 @@ function GlitchName({ runKey }: { runKey: number }) {
       };
 
       decodeNext();
-    }, 600);
-  }, [runKey]); // re-runs every time runKey changes
+    }, startDelay);
+  }, [runKey]);
 
   return (
     <span
       style={{
+        fontSize,
         filter:     flicker ? "brightness(3) blur(1px)" : settled ? "brightness(1)" : "brightness(1.4)",
         transition: "filter 0.15s ease",
         textShadow: settled ? "none" : "0 0 20px rgba(63,185,80,0.8), 0 0 40px rgba(63,185,80,0.4)",
+        display: "inline-block",
       }}
     >
       {display.map((char, i) => {
-        const isSpace  = FULL_NAME[i] === " ";
-        const isLocked = char === FULL_NAME[i] || isSpace;
+        const isLocked = char === word[i];
         const isGlitch = !isLocked && char !== "_";
         return (
           <span key={i} style={{
@@ -138,13 +149,34 @@ function GlitchName({ runKey }: { runKey: number }) {
               : "rgba(63,185,80,0.25)",
             transition:  isLocked ? "color 0.3s ease" : "none",
             display:     "inline-block",
-            minWidth:    isSpace ? "0.35em" : undefined,
           }}>
             {char}
           </span>
         );
       })}
     </span>
+  );
+}
+
+function GlitchName({ runKey, fontSize }: { runKey: number; fontSize?: string }) {
+  // Mobile — render each word separately so they wrap as full words
+  return (
+    <>
+      {NAME_WORDS.map((word, wi) => (
+        <span key={wi}>
+          <GlitchWord
+            word={word}
+            startIndex={wi === 0 ? 0 : NAME_WORDS[0].length + 1}
+            runKey={runKey}
+            fontSize={fontSize}
+          />
+          {/* Space between words — invisible on mobile since they're stacked */}
+          {wi < NAME_WORDS.length - 1 && (
+            <span className="inline sm:inline" style={{ display: "inline-block", minWidth: "0.35em" }}> </span>
+          )}
+        </span>
+      ))}
+    </>
   );
 }
 
@@ -180,16 +212,23 @@ export default function Hero({ glitchKey }: { glitchKey: number }) {
           style={{ top: "48%" }}
         />
 
-        {/* Name — two lines on mobile, one on large screens */}
+        {/* Name — breaks cleanly by word on mobile */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
           className="font-mono font-bold leading-tight mb-4 w-full text-center"
-          style={{ fontSize: "clamp(2rem, 5.5vw, 4.2rem)" }}
         >
-          <span className="text-green">&gt;&nbsp;</span>
-          <GlitchName runKey={glitchKey} />
+          {/* On mobile: stack prompt + each word on its own line */}
+          <div className="flex flex-col items-center gap-1 sm:hidden">
+            <span className="text-green" style={{ fontSize: "clamp(1.8rem, 8vw, 2.4rem)" }}>&gt;</span>
+            <GlitchName runKey={glitchKey} fontSize="clamp(1.8rem, 9vw, 2.6rem)" />
+          </div>
+          {/* On desktop: all on one line */}
+          <div className="hidden sm:block" style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}>
+            <span className="text-green">&gt;&nbsp;</span>
+            <GlitchName runKey={glitchKey} fontSize="clamp(2rem, 5vw, 4rem)" />
+          </div>
         </motion.div>
 
         {/* Typing role */}
