@@ -15,22 +15,22 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Daniel Anifowoshe — Full-Stack Developer",
+  title: "Daniel Anifowoshe — Software Developer",
   description:
-    "Full-stack developer specializing in C# .NET, Next.js, MERN stack for web development and React Native for mobile development. Building robust, scalable applications.",
+    "Software developer specializing in C# .NET, Next.js, MERN stack for web development and React Native for mobile development. Building robust, scalable applications.",
   keywords: ["developer", "portfolio", "Next.js", "C#", ".NET", "full-stack"],
   authors: [{ name: "Daniel Anifowoshe" }],
   openGraph: {
-    title: "Daniel Anifowoshe — Full-Stack Developer",
-    description: "Full-stack developer specializing in C# .NET and Next.js.",
+    title: "Daniel Anifowoshe — Software Developer",
+    description: "Software developer specializing in C# .NET and Next.js.",
     type: "website",
-    url: "https://danielanifowoshe.dev",
+    url: "https://portfolio-next-liart-psi.vercel.app",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Daniel Anifowoshe — Full-Stack Developer",
-    description: "Full-stack developer specializing in C# .NET and Next.js.",
+    title: "Daniel Anifowoshe — Software Developer",
+    description: "Software developer specializing in C# .NET and Next.js.",
     images: ["/og-image.png"],
   },
 };
