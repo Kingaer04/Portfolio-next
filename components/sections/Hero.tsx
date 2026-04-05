@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { FiDownload, FiArrowDown, FiGithub, FiLinkedin } from "react-icons/fi";
@@ -47,7 +47,10 @@ function CursorGlow() {
   useEffect(() => {
     const el = glowRef.current;
     if (!el) return;
-    const onMove = (e: MouseEvent) => { el.style.left = `${e.clientX}px`; el.style.top = `${e.clientY}px`; };
+    const onMove = (e: MouseEvent) => {
+      el.style.left = `${e.clientX}px`;
+      el.style.top  = `${e.clientY}px`;
+    };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
@@ -60,13 +63,98 @@ function CursorGlow() {
   );
 }
 
+// ── Glitch decode ─────────────────────────────────────────────────────
+const GLITCH_CHARS = "アイウエオカキ01#@$%&{}[]<>|_=+-*/\\;:!?~^";
+const FULL_NAME    = "Daniel Anifowoshe";
+
+function GlitchName({ runKey }: { runKey: number }) {
+  const [display, setDisplay] = useState<string[]>(() => Array(FULL_NAME.length).fill("_"));
+  const [settled, setSettled] = useState(false);
+  const [flicker, setFlicker] = useState(false);
+
+  useEffect(() => {
+    setDisplay(Array(FULL_NAME.length).fill("_"));
+    setSettled(false);
+    setFlicker(false);
+
+    // Phase 1 — chaos
+    const chaosId = setInterval(() => {
+      setDisplay(
+        FULL_NAME.split("").map((ch) =>
+          ch === " " ? " " : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
+        )
+      );
+    }, 50);
+
+    // Phase 2 — decode
+    setTimeout(() => {
+      clearInterval(chaosId);
+      let resolved = 0;
+
+      const decodeNext = () => {
+        if (resolved >= FULL_NAME.length) {
+          setTimeout(() => {
+            setFlicker(true);
+            setTimeout(() => { setFlicker(false); setSettled(true); }, 180);
+          }, 120);
+          return;
+        }
+        let ticks = 0;
+        const glitchId = setInterval(() => {
+          setDisplay((prev) =>
+            prev.map((_, i) => {
+              if (i < resolved) return FULL_NAME[i];
+              if (FULL_NAME[i] === " ") return " ";
+              return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+            })
+          );
+          ticks++;
+          if (ticks >= 4) { clearInterval(glitchId); resolved++; decodeNext(); }
+        }, 40);
+      };
+
+      decodeNext();
+    }, 600);
+  }, [runKey]); // re-runs every time runKey changes
+
+  return (
+    <span
+      style={{
+        filter:     flicker ? "brightness(3) blur(1px)" : settled ? "brightness(1)" : "brightness(1.4)",
+        transition: "filter 0.15s ease",
+        textShadow: settled ? "none" : "0 0 20px rgba(63,185,80,0.8), 0 0 40px rgba(63,185,80,0.4)",
+      }}
+    >
+      {display.map((char, i) => {
+        const isSpace  = FULL_NAME[i] === " ";
+        const isLocked = char === FULL_NAME[i] || isSpace;
+        const isGlitch = !isLocked && char !== "_";
+        return (
+          <span key={i} style={{
+            color: isLocked
+              ? settled ? "#E6EDF3" : "#3FB950"
+              : isGlitch
+              ? `rgba(88,166,255,${0.5 + Math.random() * 0.5})`
+              : "rgba(63,185,80,0.25)",
+            transition:  isLocked ? "color 0.3s ease" : "none",
+            display:     "inline-block",
+            minWidth:    isSpace ? "0.35em" : undefined,
+          }}>
+            {char}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 const fadeUp = (delay = 0) => ({
-  initial:    { opacity: 0, y: 28 },
+  initial:    { opacity: 0, y: 20 },
   animate:    { opacity: 1, y: 0 },
-  transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] as [number,number,number,number] },
+  transition: { duration: 0.5, delay, ease: [0.25, 0.46, 0.45, 0.94] as [number,number,number,number] },
 });
 
-export default function Hero() {
+export default function Hero({ glitchKey }: { glitchKey: number }) {
   return (
     <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-bg" />
@@ -75,26 +163,38 @@ export default function Hero() {
         background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(13,17,23,0) 0%, rgba(13,17,23,0.88) 75%)",
       }} />
       <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, #3FB950 2px, #3FB950 3px)", backgroundSize: "100% 4px" }} />
+        style={{
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, #3FB950 2px, #3FB950 3px)",
+          backgroundSize: "100% 4px",
+        }} />
       <CursorGlow />
 
       <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center pt-20 flex flex-col items-center">
 
-        {/* <motion.div {...fadeUp(0.1)} className="inline-flex items-center gap-2 mb-5">
-          <span className="h-px w-8 bg-green/40" />
-          <span className="font-mono text-[11px] text-green/60 tracking-[0.3em] uppercase">
-            Target Acquired
-          </span>
-          <span className="h-px w-8 bg-green/40" />
-        </motion.div> */}
+        {/* Scan sweep */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 1 }}
+          animate={{ scaleX: 1, opacity: 0 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: "easeInOut" }}
+          className="absolute left-0 right-0 h-0.5 bg-green/50 origin-left pointer-events-none"
+          style={{ top: "48%" }}
+        />
 
-        <motion.h1 {...fadeUp(0.25)} className="font-mono font-bold text-text leading-none mb-4"
-          style={{ fontSize: "clamp(2.6rem, 8vw, 5.5rem)" }}>
-          <span className="text-green">&gt;&nbsp;</span>Daniel Anifowoshe
-        </motion.h1>
+        {/* Name — two lines on mobile, one on large screens */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="font-mono font-bold leading-tight mb-4 w-full text-center"
+          style={{ fontSize: "clamp(2rem, 5.5vw, 4.2rem)" }}
+        >
+          <span className="text-green">&gt;&nbsp;</span>
+          <GlitchName runKey={glitchKey} />
+        </motion.div>
 
-        <motion.div {...fadeUp(0.4)} className="font-mono mb-4 flex items-center justify-center gap-2"
-          style={{ fontSize: "clamp(0.95rem, 2.5vw, 1.35rem)" }}>
+        {/* Typing role */}
+        <motion.div {...fadeUp(1.4)} className="font-mono mb-4 flex items-center justify-center gap-2"
+          style={{ fontSize: "clamp(0.9rem, 2.2vw, 1.25rem)" }}>
           <span className="text-green/40">[</span>
           <TypeAnimation
             sequence={[
@@ -108,7 +208,8 @@ export default function Hero() {
           <span className="text-green/40">]</span>
         </motion.div>
 
-        <motion.p {...fadeUp(0.55)}
+        {/* Bio */}
+        <motion.p {...fadeUp(1.7)}
           className="font-sans text-muted max-w-lg mx-auto leading-relaxed mb-10 text-sm md:text-base">
           I architect and ship production-grade applications —{" "}
           <span className="text-text font-medium">C# .NET backends</span> paired with fast{" "}
@@ -117,7 +218,8 @@ export default function Hero() {
           <span className="text-text font-medium">React Native</span> for mobile.
         </motion.p>
 
-        <motion.div {...fadeUp(0.7)}
+        {/* CTAs */}
+        <motion.div {...fadeUp(2.0)}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <a href="#projects"
             className="inline-flex items-center gap-2 font-mono text-sm font-bold px-7 py-3 bg-green text-bg rounded hover:bg-green/90 active:scale-95 transition-all tracking-wider">
@@ -133,7 +235,8 @@ export default function Hero() {
           </a>
         </motion.div>
 
-        <motion.div {...fadeUp(0.85)} className="flex flex-col items-center gap-5 pb-24">
+        {/* Socials + stack */}
+        <motion.div {...fadeUp(2.2)} className="flex flex-col items-center gap-5 pb-24">
           <div className="flex items-center gap-3 w-full max-w-xs">
             <div className="flex-1 h-px bg-border/50" />
             <span className="font-mono text-[10px] text-border tracking-widest">LINKS</span>
@@ -161,12 +264,13 @@ export default function Hero() {
         </motion.div>
       </div>
 
+      {/* Scroll */}
       <motion.a
         href="#about"
         aria-label="Scroll down"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
+        transition={{ delay: 2.6 }}
         className="absolute bottom-8 left-0 right-0 z-20 flex flex-col items-center gap-1 text-muted hover:text-green transition-colors animate-float"
       >
         <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-green/50">scroll</span>
