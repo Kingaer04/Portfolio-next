@@ -253,7 +253,7 @@ export default function Hero({ glitchKey }: { glitchKey: number }) {
           I architect and ship production-grade applications —{" "}
           <span className="text-text font-medium">C# .NET backends</span> paired with fast{" "}
           <span className="text-text font-medium">Next.js frontends</span>. Also versed in the{" "}
-          <span className="text-text font-medium">MERN stack</span> and{" "}
+          <span className="text-text font-medium">MERN stack</span> for web development and{" "}
           <span className="text-text font-medium">React Native</span> for mobile.
         </motion.p>
 
