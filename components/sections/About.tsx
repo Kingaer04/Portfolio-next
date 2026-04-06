@@ -53,18 +53,18 @@ export default function About() {
                   <span className="text-green">name</span>
                   <span className="text-muted">: </span>
                   {/* ── EDIT: your name ── */}
-                  <span className="text-orange">&quot;Your Name&quot;</span><span className="text-muted">,</span>
+                  <span className="text-orange">&quot;Daniel Anifowoshe&quot;</span><span className="text-muted">,</span>
                 </p>
                 <p className="pl-5">
                   <span className="text-green">location</span>
                   <span className="text-muted">: </span>
                   {/* ── EDIT: your location ── */}
-                  <span className="text-orange">&quot;Lagos, Nigeria&quot;</span><span className="text-muted">,</span>
+                  <span className="text-orange">&quot;Ogun, Nigeria&quot;</span><span className="text-muted">,</span>
                 </p>
                 <p className="pl-5">
                   <span className="text-green">role</span>
                   <span className="text-muted">: </span>
-                  <span className="text-orange">&quot;Full-Stack Developer&quot;</span><span className="text-muted">,</span>
+                  <span className="text-orange">&quot;Software Developer&quot;</span><span className="text-muted">,</span>
                 </p>
                 <p className="pl-5">
                   <span className="text-green">focus</span>
@@ -72,6 +72,10 @@ export default function About() {
                   <span className="text-orange">&quot;C# .NET&quot;</span>
                   <span className="text-muted">, </span>
                   <span className="text-orange">&quot;Next.js&quot;</span>
+                  <span className="text-muted">, </span>
+                  <span className="text-orange">&quot;MERN&quot;</span>
+                  <span className="text-muted">, </span>
+                  <span className="text-orange">&quot;React Native&quot;</span>
                   <span className="text-muted">],</span>
                 </p>
                 <p className="pl-5">
@@ -103,7 +107,7 @@ export default function About() {
           >
             <p className="font-sans text-muted leading-relaxed">
               {/* ── EDIT: your paragraph bio ── */}
-              I&apos;m a full-stack developer passionate about building software that solves
+              I&apos;m a software developer passionate about building software that solves
               real problems. I specialise in crafting robust backend systems with{" "}
               <span className="text-text">C# and .NET</span>, and pairing them with
               modern, accessible frontends in{" "}
@@ -112,7 +116,7 @@ export default function About() {
             <p className="font-sans text-muted leading-relaxed">
               {/* ── EDIT: your second paragraph ── */}
               Currently rebuilding a full Healthcare Management System — applying
-              Onion Architecture, real-time chat via SignalR, and role-based multi-tenant
+              Onion Architecture, real-time chat, and role-based multi-tenant
               access — to deepen my systems design skills and ship something meaningful.
             </p>
 
