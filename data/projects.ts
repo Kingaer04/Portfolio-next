@@ -21,8 +21,8 @@ export const projects: Project[] = [
     title: "Healthcare Management System",
     description:
       "A full-stack HMS featuring role-based portals for receptionists, doctors, and patients. Includes real-time appointment booking, SignalR-powered chat, and JWT-secured multi-tenant architecture.",
-    tech: ["Next.js", "C#", ".NET 8", "PostgreSQL", "SignalR", "Docker"],
-    repoUrl: "https://github.com/yourusername/hms",
+    tech: ["Next.js", "C#", ".NET 8", "SQL Server", "JWT"],
+    repoUrl: "https://github.com/kingaer04",
     liveUrl: "",
     imageUrl: "/projects/hms.png",
     featured: true,

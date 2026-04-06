@@ -67,9 +67,9 @@ export default function Skills() {
           className="grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           {[
-            { label: "years_coding",      value: "3+" },
-            { label: "projects_shipped",  value: "10+" },
-            { label: "tech_stack_size",   value: "18+" },
+            { label: "years_coding",      value: "4+" },
+            { label: "projects_shipped",  value: "5+" },
+            { label: "tech_stack_size",   value: "8+" },
             { label: "cups_of_coffee",    value: "∞" },
           ].map(({ label, value }) => (
             <div key={label} className="bg-surface border border-border rounded-lg p-4 text-center hover:border-green/30 transition-colors">
