@@ -64,7 +64,7 @@ function CursorGlow() {
 }
 
 // ── Glitch decode ─────────────────────────────────────────────────────
-const GLITCH_CHARS = "アイウエオカキ01#@$%&{}[]<>|_=+-*/\\;:!?~^";
+const GLITCH_CHARS = "アイウエオカキ 01#@$%&{}[]<>|_=+-*/\\;:!?~^";
 const FULL_NAME    = "Daniel Anifowoshe";
 const NAME_WORDS   = ["Daniel", "Anifowoshe"];
 
