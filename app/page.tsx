@@ -15,7 +15,7 @@ const BOOT_LINES = [
   { text: "CPU CORES ONLINE ████████████ 100%",              delay: 800 },
   { text: "SCANNING TARGET DATABASE...",                      delay: 1200 },
   { text: "TARGET ACQUIRED :: DANIEL ANIFOWOSHE",            delay: 1700 },
-  { text: "CLASSIFICATION: FULL-STACK ENGINEER",             delay: 2100 },
+  { text: "CLASSIFICATION: SOFTWARE DEVELOPER",             delay: 2100 },
   { text: "THREAT LEVEL: EXCEPTIONAL",                        delay: 2500 },
   { text: "MISSION: DELIVER PRODUCTION-GRADE SOFTWARE",      delay: 2900 },
   { text: "STATUS: ALL SYSTEMS ONLINE ✓",                    delay: 3400 },
